@@ -3,15 +3,17 @@
 ## Computer vision with OpenCV
 ## Machine Learning with Scikit-Learn
 
-### Here we are going to apply a traditional computer vision approach to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The code will be incorporated into my [advanced lane line detection project](https://github.com/rzuccolo/rz-advanced-lane-detection). Thanks to Udacity Self-driving Car Nanodegree for providing me the basic skills set to get there!
+### Here we are going to apply a traditional computer vision approach to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The code will be incorporated into my [advanced lane line detection project](https://github.com/rzuccolo/rz-advanced-lane-detection). 
 
-### This classical approach, basically, requires all parameters to be tuned by hand, which gives a lot of intuition of how it works and why. There is an increasing adoption of deep learning implementations (e.g. [YOLO](https://pjreddie.com/darknet/yolo/) and [SSD](http://www.cs.unc.edu/~wliu/papers/ssd.pdf)) using Convolutional Neural Networks for obstacle and objects detection on the road. In many cases, deep learning has been showing better and more efficient results for the same tasks, but is still kind of a "black box", it is good to learn both techniques. 
+### Thanks to Udacity Self-driving Car Nanodegree for providing me the basic skills set to get there!
+
+### This classical approach, basically, requires all parameters to be tuned by hand, which gives a lot of intuition of how it works and why. There is an increasing adoption of deep learning implementations (e.g. [YOLO](https://pjreddie.com/darknet/yolo/) and [SSD](http://www.cs.unc.edu/~wliu/papers/ssd.pdf)) using Convolutional Neural Networks for obstacle and objects detection on the road. In many cases, deep learning has been showing better and more efficient results for the same tasks, but is still kind of a "black box". It is good to learn both techniques. 
 
 ---
 
 **Vehicle Detection Project**
 
-The goals / steps of this project are the following:
+The goals/steps of this project are the following:
 
 * Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier, Linear SVM classifier
 * Apply a color transform and append binned color features, as well as histograms of color, to the HOG feature vector. 
@@ -103,9 +105,9 @@ Default configuration will:
 
 Open the **main.py** and set the proper output directory and video source (code lines 521-522).
 
-Default configuration will:
+The default configuration will:
 * Read video source from parent directory
-* Save annotated video to: `output_images`
+* Save annotated video to `output_images`
 
 Execute the script as follow: 
 ```
@@ -115,13 +117,13 @@ python main.py
 ---
 
 ## Motivation and Challenge
-Recognition of objects on a image is the essence of computer vision. When we look at the world with our own eyes, we are constantly detecting and classifying objects with our brain, and that perception of the world around us is important for driver-less car systems. 
+Recognition of objects on an image is the essence of computer vision. When we look at the world with our own eyes, we are constantly detecting and classifying objects with our brain, and that perception of the world around us is important for driverless car systems. 
 
-There are a lot challenges behind image classification process. We don't know where in the image the objects will appear, or which size/shape it will be, which color, or how many of those it will show up at same time. Regarding self-driving cars, it applies to vehicles, pedestrians, signs and all other things showing up along the way.
+There are a lot of challenges behind image classification process. We don't know where in the image the objects will appear, or which size/shape it will be, which color, or how many of those it will show up at the same time. Regarding self-driving cars, it applies to vehicles, pedestrians, signs and all other things showing up along the way.
 
 For vehicle detection, it is important to identify and anticipate its position on the road,  how far it is from the reference car,  which way they are going to and how fast they are moving. Same way as we do with our own eye when we drive. 
 
-Here are some of the characteristics that are useful for identifying objects on a image:
+Here are some of the characteristics that are useful for identifying objects on an image:
 * Color
 * Position within the image
 * Shape
@@ -133,7 +135,7 @@ Here are some of the characteristics that are useful for identifying objects on 
 
 Here are links to the labeled data for: [vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip) and  [non-vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip). This is a small dataset with 8,792 vehicles images and 8,968 non-vehicles images, and size of 64x64 pixels. The images come from a combination of the [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html), the [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/), and examples extracted from the project video itself. 
 
-Udacity recently made available a bigger labeled [dataset](https://github.com/udacity/self-driving-car/tree/master/annotations) with full resolution, which could be used to further augment and better train the classifier, but I decided to carry on the project using only the small dataset and focus on learning the techniques. I will let further improvements as discussed at the end of this writeup for future implementation.
+Udacity recently made available a bigger labeled [dataset](https://github.com/udacity/self-driving-car/tree/master/annotations) with full resolution, which could be used to further augment and better train the classifier, but I decided to carry on the project using only the small dataset and focus on learning the techniques. I will let further improvements as discussed at the end of this write-up for future implementation.
 
 Data exploration:
 
@@ -144,7 +146,7 @@ Data exploration:
 ## Methodology
 First, we identify and extract the features from the image, and then use it to train a classifier. Next, we execute a window search on the image, on each frame from the video stream, to reliably identify and classify the vehicles. Finally, we must deal with false positives and estimate a bounding box for vehicles detected.
 
-It all comes down to intensity and gradients of intensity of image raw pixels, and how these features capture the color and shape of the object. Here are the main features there are extracted and combined for this project: 
+It all comes down to intensity and gradients of intensities of image raw pixels, and how these features capture the color and shape of the object. Here are the main features there are extracted and combined for this project: 
 
 * Histogram of pixel intensity: it reveals the color characteristics of the vehicles
 * Gradients of pixel intensity: it reveals the shape characteristics of the vehicles
@@ -171,7 +173,7 @@ skimage.feature.hog(image, orientations=9, pixels_per_cell=(8, 8), cells_per_blo
 
 ![alt text][image4]
 
-Objects on the image may belong at same class but show up in different colors, that is know as non-variance problem. To deal with that, we got evaluate how to better cluster the color information of same class objects. We look into different color spaces and observe how the object we are looking for, stand-out from the background. There are many color spaces out there such as HLV, HSV, LUV, YUV, YCrCb, etc.   **I have adopted YCrCb color space**, since I found it to be clustering the colors pretty well along the Y channel as shown below. **Hence, I have computed HOG futures only for Y channel**. 
+Objects on the image may belong to same class but show up in different colors, that is known as the non-variance problem. To deal with that, we got to evaluate how to better cluster the color information of same class objects. We look into different color spaces and observe how the object we are looking for, stand-out from the background. There are many color spaces out there such as HLV, HSV, LUV, YUV, YCrCb, etc.   **I have adopted YCrCb color space**, since I found it to be clustering the colors pretty well along the Y channel as shown below. **Hence, I have computed HOG futures only for Y channel**. 
 
 Code lines (187-202) in `vehicle_detection_helpers.py`.
 
@@ -186,7 +188,7 @@ Code lines (187-202) in `vehicle_detection_helpers.py`.
 
 Code lines (25-40) in `vehicle_detection_helpers.py`. 
 
-The idea here is to extract from the image the color "signature" for vehicles, so we can later train our classifier and then search for such signatures along the image frames. Basically, locations with similar distributions will point us to close matches. This technique give us some level of structure freedom, since it is not sensitive to a perfect arrange of pixel (cars may have different orientation view for example). Slightly different aspects and orientations will still give us a match. Variations in size are accommodated by normalizing the histograms.
+The idea here is to extract the color "signature" from the image, so we can later train our classifier and then search for such signatures along the image frames. Basically, locations with similar distributions will point us to close matches. This technique give us some level of structure freedom since it is not sensitive to a perfect arrange of pixels (cars may have different orientation view for example). Slightly different aspects and orientations will still give us a match. Variations in size are accommodated by normalizing the histograms.
 
 Here is the basic approach to compute the histograms:
 
@@ -212,14 +214,14 @@ Here is a visualization example:
 
 Code lines (43-56) in `vehicle_detection_helpers.py`.
 
-Here, we collect the image pixels itself as a feature vector. It can be inefficient to include three (3) color channels of a full resolution image, so we perform a called spatial binning on the image, where close pixels are lumped together to form a lower resolution image. During training we tune how lower we can go and still retain enough information to help in finding vehicles.
+Here, we collect the image pixels itself as a feature vector. It can be inefficient to include three (3) color channels of a full resolution image, so we perform a called spatial binning on the image, where close pixels are lumped together to form a lower resolution image. During training, we tune how lower we can go and still retain enough information to help in finding vehicles.
 
 How we create this feature vector? We resize the image and convert it to one dimensional vector:
 
 ```
 # Resize and convert to 1D
 small_img = cv2.resize(image, (32, 32))
-feature_vec = small_img.ravel()	
+feature_vec = small_img.ravel()
 ```
 
 ![alt text][image11]
@@ -240,7 +242,7 @@ We start by reading in all the `vehicle` and `non-vehicle` images.  Here is an e
 
 Then, we build a function to extract the spatial binning, the color histogram and the HOG for a list of images. The final vectors are the concatenation of the three (3) pieces: spatial binning, color and HOG. Next, we use this function to extract the features for the whole dataset. A generator may be hand at this stage to avoid computer memory issues, but I was dealing with a small dataset, so I did not implement it, it would be a good future improvement.
 
-Next, the feature vectors were normalized to deal with different magnitude of concatenated features. Unbalanced number of features between spatial binning, histogram of colors and HOG, were minimized by dropping the features that were not significantly contributing. All that was  accomplished by applying [`StandardScaler()`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html) method, from Python's sklearn package:
+Next, the feature vectors were normalized to deal with the different magnitude of concatenated features. The unbalanced number of features between spatial binning, the histogram of colors and HOG, were minimized by dropping the features that were not significantly contributing. All that was  accomplished by applying [`StandardScaler()`](http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html) method, from Python's sklearn package:
 
 ```
 # Fit a per-column scaler
@@ -288,13 +290,13 @@ I was able to get 98.9% test accuracy using this small dataset. The SVM training
 
 Code lines (239-423) in `main.py`.
 
-Now that we have a trained classifier, we got implement a way to search for objects on the image. We are going to split the images in subsets of images (windows), extract the same features as described above (binning, color histogram, HOG) and feed into the classifier for prediction.
+Now that we have a trained classifier, we got to implement a way to search for objects on the image. We are going to split the images into subsets of images (windows), extract the same features as described above (binning, color histogram, HOG) and feed into the classifier for prediction.
 
-Ideally, we need to cut the the image subset close to the contour of the object, so the "signature" would be easily detected by the classifier. But we don't know the size of the object that will show up on the image, so we need to search it in multiple scale windows. Here we need to be careful, because it can easily lead to excessive large number of windows to search on each image, which ultimately will make the pipeline inefficient and running slow.
+Ideally, we need to cut the image subset close to the contour of the object, so the "signature" would be easily detected by the classifier. But we don't know the size of the object that will show up on the image, so we need to search it in multiple scale windows. Here we need to be careful because it can easily lead to an excessively large number of windows to search for each image, which ultimately will make the pipeline inefficient and running slow.
 
-First thing, I ignored the upper half of the image because we don't expect vehicle to show up in there, that is beyond the road horizon. Then, I watched roads video streams to get a sense of object size along the depth perspective, so I could better define the size of windows and the region of interest. 
+First thing, I ignored the upper half of the image because we don't expect a vehicle to show up in there, that is beyond the road horizon. Then, I watched roads video streams to get a sense of object size along the depth perspective, so I could better define the size of windows and the region of interest. 
 
-In the end, I decided to use four (4) windows sizes, with a 75% overlap, searching within specific regions of interest as shown in the images below. With more experimentation, it could be further improved, but over all I am searching a total of 12+34+56+60=162 windows per frame. Here are the windows characteristics:
+In the end, I decided to use four (4) windows sizes, with a 75% overlap, searching within specific regions of interest as shown in the images below. With more experimentation, it could be further improved, but overall I am searching a total of 12+34+56+60=162 windows per frame. Here are the characteristics of the windows:
 
 ```
 # Window 1
@@ -337,7 +339,7 @@ ystop = 490
 ![alt text][image19]
 
 
-Below there are some examples of of sliding window searches. But at this point the pipeline have multiple overlap windows at identified objects. Next we will apply a technique with heat-maps to estimate a bounding box.
+Below there are some examples of sliding window searches. But at this point, the pipeline have multiple overlap windows at identified objects. Next, we will apply a technique with heat-maps to estimate a bounding box.
 
 ![alt text][image20]
 
@@ -354,7 +356,7 @@ Below there are some examples of of sliding window searches. But at this point t
 
 Code lines (204-253) in `vehicle_detection_helpers.py`.
 
-At this point the pipeline is getting multiple overlap windows on identified vehicles, and also showing false positives. False positives that are now properly filtered out could lead the driver-less system to take actions when it is not necessary and potentially cause an accident. So the task now is to bound the multiple detection on same object, and get rid of false positives by using a heat-map technique.
+At this point, the pipeline is getting multiple overlap windows on identified vehicles, and also showing false positives. False positives that are now properly filtered out could lead the driver-less system to take actions when it is not necessary and potentially cause an accident. So the task now is to bound the multiple detections on the same object, and get rid of false positives by using a heat-map technique.
 
 To make a heat-map, we simply add "heat" (+=1) for all pixels within windows where a positive detection is reported by the classifier. 
 
@@ -390,14 +392,14 @@ Here are some final examples:
 * **[Annotated Project Video](https://vimeo.com/213638727)** Click on this link to watch the annotations for the project video.
 
 
----	
+---    
 
 
 ## Discussion
 
 The pipeline is good for the project video but I would like to see how it goes on other video streams, I will let it for future tests. There are still some eventual false positives and the bounding boxes are a bit "jittery", despite the fact I averaged the heat-maps from previous fifteen (15) frames for each new frame. Nevertheless, so far I am happy with the results! Those are good techniques that allowed me to build a strong understanding and solid base for the task.
 
-It is surely a lot work to properly hand tuning all those parameters, but at same time it gives you a good sense on strengths and weakness of computer vision. The pipeline doesn’t detect cars driving in the opposite direction because of heat-maps averaging over time, which should be solved with more sophisticated techniques, better trained classifiers, or improved sliding search window algorithm. A deep learning classifier seems to be the next step down the learning road now!
+It is surely a lot of work to properly hand tuning all those parameters, but at the same time, it gives you a good sense of strengths and weakness of computer vision. The pipeline doesn’t detect cars driving in the opposite direction because of heat-maps averaging over time, which should be solved with more sophisticated techniques, better-trained classifiers, or improved sliding search window algorithm. A deep learning classifier seems to be the next step down the learning road now!
 
 ---
 

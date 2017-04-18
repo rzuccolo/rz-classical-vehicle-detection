@@ -3,15 +3,17 @@
 ## Computer vision with OpenCV
 ## Machine Learning with Scikit-Learn
 
-### Here we are going to apply a traditional computer vision approach to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The code will be incorporated into my [advanced lane line detection project](https://github.com/rzuccolo/rz-advanced-lane-detection). Thanks to Udacity Self-driving Car Nanodegree for providing me the basic skills set to get there!
+### Here we are going to apply a traditional computer vision approach to write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The code will be incorporated into my [advanced lane line detection project](https://github.com/rzuccolo/rz-advanced-lane-detection). 
 
-### This classical approach, basically, requires all parameters to be tuned by hand, which gives a lot of intuition of how it works and why. There is an increasing adoption of deep learning implementations (e.g. [YOLO](https://pjreddie.com/darknet/yolo/) and [SSD](http://www.cs.unc.edu/~wliu/papers/ssd.pdf)) using Convolutional Neural Networks for obstacle and objects detection on the road. In many cases, deep learning has been showing better and more efficient results for the same tasks, but is still kind of a "black box", it is good to learn both techniques. 
+### Thanks to Udacity Self-driving Car Nanodegree for providing me the basic skills set to get there!
+
+### This classical approach, basically, requires all parameters to be tuned by hand, which gives a lot of intuition of how it works and why. There is an increasing adoption of deep learning implementations (e.g. [YOLO](https://pjreddie.com/darknet/yolo/) and [SSD](http://www.cs.unc.edu/~wliu/papers/ssd.pdf)) using Convolutional Neural Networks for obstacle and objects detection on the road. In many cases, deep learning has been showing better and more efficient results for the same tasks, but is still kind of a "black box". It is good to learn both techniques. 
 
 ---
 
 **Vehicle Detection Project**
 
-The goals / steps of this project are the following:
+The goals/steps of this project are the following:
 
 * Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier, Linear SVM classifier
 * Apply a color transform and append binned color features, as well as histograms of color, to the HOG feature vector. 
@@ -80,9 +82,9 @@ Default configuration will:
 
 Open the **main.py** and set the proper output directory and video source (code lines 521-522).
 
-Default configuration will:
+The default configuration will:
 * Read video source from parent directory
-* Save annotated video to: `output_images`
+* Save annotated video to `output_images`
 
 Execute the script as follow: 
 ```
@@ -92,13 +94,13 @@ python main.py
 ---
 
 ## Motivation and Challenge
-Recognition of objects on a image is the essence of computer vision. When we look at the world with our own eyes, we are constantly detecting and classifying objects with our brain, and that perception of the world around us is important for driver-less car systems. 
+Recognition of objects on an image is the essence of computer vision. When we look at the world with our own eyes, we are constantly detecting and classifying objects with our brain, and that perception of the world around us is important for driverless car systems. 
 
-There are a lot challenges behind image classification process. We don't know where in the image the objects will appear, or which size/shape it will be, which color, or how many of those it will show up at same time. Regarding self-driving cars, it applies to vehicles, pedestrians, signs and all other things showing up along the way.
+There are a lot of challenges behind image classification process. We don't know where in the image the objects will appear, or which size/shape it will be, which color, or how many of those it will show up at the same time. Regarding self-driving cars, it applies to vehicles, pedestrians, signs and all other things showing up along the way.
 
 For vehicle detection, it is important to identify and anticipate its position on the road,  how far it is from the reference car,  which way they are going to and how fast they are moving. Same way as we do with our own eye when we drive. 
 
-Here are some of the characteristics that are useful for identifying objects on a image:
+Here are some of the characteristics that are useful for identifying objects on an image:
 * Color
 * Position within the image
 * Shape
@@ -110,7 +112,7 @@ Here are some of the characteristics that are useful for identifying objects on 
 
 Here are links to the labeled data for: [vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/vehicles.zip) and  [non-vehicle](https://s3.amazonaws.com/udacity-sdc/Vehicle_Tracking/non-vehicles.zip). This is a small dataset with 8,792 vehicles images and 8,968 non-vehicles images, and size of 64x64 pixels. The images come from a combination of the [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html), the [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/), and examples extracted from the project video itself. 
 
-Udacity recently made available a bigger labeled [dataset](https://github.com/udacity/self-driving-car/tree/master/annotations) with full resolution, which could be used to further augment and better train the classifier, but I decided to carry on the project using only the small dataset and focus on learning the techniques. I will let further improvements as discussed at the end of this writeup for future implementation.
+Udacity recently made available a bigger labeled [dataset](https://github.com/udacity/self-driving-car/tree/master/annotations) with full resolution, which could be used to further augment and better train the classifier, but I decided to carry on the project using only the small dataset and focus on learning the techniques. I will let further improvements as discussed at the end of this write-up for future implementation.
 
 Data exploration:
 
@@ -121,7 +123,7 @@ Data exploration:
 ## Methodology
 First, we identify and extract the features from the image, and then use it to train a classifier. Next, we execute a window search on the image, on each frame from the video stream, to reliably identify and classify the vehicles. Finally, we must deal with false positives and estimate a bounding box for vehicles detected.
 
-It all comes down to intensity and gradients of intensity of image raw pixels, and how these features capture the color and shape of the object. Here are the main features there are extracted and combined for this project: 
+It all comes down to intensity and gradients of intensities of image raw pixels, and how these features capture the color and shape of the object. Here are the main features there are extracted and combined for this project: 
 
 * Histogram of pixel intensity: it reveals the color characteristics of the vehicles
 * Gradients of pixel intensity: it reveals the shape characteristics of the vehicles
@@ -131,9 +133,9 @@ It all comes down to intensity and gradients of intensity of image raw pixels, a
 
 Here are some final examples:
 
-![alt text][image24]
+![alt text][image2]
 
-![alt text][image25]
+![alt text][image3]
 
 
 ---
@@ -143,14 +145,14 @@ Here are some final examples:
 * **[Annotated Project Video](https://vimeo.com/213638727)** Click on this link to watch the annotations for the project video.
 
 
----	
+---    
 
 
 ## Discussion
 
 The pipeline is good for the project video but I would like to see how it goes on other video streams, I will let it for future tests. There are still some eventual false positives and the bounding boxes are a bit "jittery", despite the fact I averaged the heat-maps from previous fifteen (15) frames for each new frame. Nevertheless, so far I am happy with the results! Those are good techniques that allowed me to build a strong understanding and solid base for the task.
 
-It is surely a lot work to properly hand tuning all those parameters, but at same time it gives you a good sense on strengths and weakness of computer vision. The pipeline doesn’t detect cars driving in the opposite direction because of heat-maps averaging over time, which should be solved with more sophisticated techniques, better trained classifiers, or improved sliding search window algorithm. A deep learning classifier seems to be the next step down the learning road now!
+It is surely a lot of work to properly hand tuning all those parameters, but at the same time, it gives you a good sense of strengths and weakness of computer vision. The pipeline doesn’t detect cars driving in the opposite direction because of heat-maps averaging over time, which should be solved with more sophisticated techniques, better-trained classifiers, or improved sliding search window algorithm. A deep learning classifier seems to be the next step down the learning road now!
 
 ---
 
